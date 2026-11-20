@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="AERIQ — Beyond the forecast" />
   <title>AERIQ — Beyond the forecast</title>
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -19,7 +19,7 @@
     <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
       <div class="sidebar__top">
         <a href="#home" class="brand" data-nav="home">
-          <img src="assets/logo.svg" alt="AERIQ" class="brand__icon" />
+          <img src="assets/logo.png" alt="AERIQ" class="brand__icon" />
           <span class="brand__text-wrap">
             <span class="brand__text">AERIQ</span>
             <span class="brand__tagline">Beyond the forecast</span>
@@ -61,27 +61,20 @@
     <div class="workspace">
       <header class="topbar">
         <div class="topbar__mobile-brand">
-          <img src="assets/logo.svg" alt="AERIQ" class="brand__icon" />
+          <img src="assets/logo.png" alt="AERIQ" class="brand__icon" />
           <span class="brand__text-wrap">
             <span class="brand__text">AERIQ</span>
             <span class="brand__tagline">Beyond the forecast</span>
           </span>
         </div>
 
-        <div class="topbar__search-group">
-          <div class="search" id="searchContainer">
-            <div class="search__field">
-              <svg class="search__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input type="search" id="citySearchInput" class="search__input" autocomplete="off" placeholder="Поиск города..." />
-              <span class="search__spinner" id="searchSpinner" hidden></span>
-            </div>
-            <ul class="search__dropdown" id="searchDropdown" role="listbox" hidden></ul>
+        <div class="search" id="searchContainer">
+          <div class="search__field">
+            <svg class="search__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="search" id="citySearchInput" class="search__input" autocomplete="off" placeholder="Поиск города..." />
+            <span class="search__spinner" id="searchSpinner" hidden></span>
           </div>
-
-          <button type="button" class="chip-control geo-btn" id="geoLocateBtn" aria-label="Geolocation" title="Geolocation">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-            <span class="chip-control__text" data-i18n="actions.geo">GPS</span>
-          </button>
+          <ul class="search__dropdown" id="searchDropdown" role="listbox" hidden></ul>
         </div>
 
         <div class="topbar__actions">
@@ -90,11 +83,11 @@
             <span class="chip-control__text" data-i18n="actions.saveCity">В избранное</span>
           </button>
           <button type="button" class="chip-control header-toggle" id="langBtnHeader" aria-label="Language">
-            <span class="header-toggle__tag">LANG</span>
+            <span class="header-toggle__tag">Язык</span>
             <strong class="header-toggle__val" id="langLabelHeader">RU</strong>
           </button>
           <button type="button" class="chip-control header-toggle" id="unitBtnHeader" aria-label="Temperature Unit">
-            <span class="header-toggle__tag">UNIT</span>
+            <span class="header-toggle__tag">Ед.</span>
             <strong class="header-toggle__val" id="unitLabelHeader">°C</strong>
           </button>
         </div>

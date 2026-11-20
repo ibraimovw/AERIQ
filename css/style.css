@@ -120,9 +120,13 @@ button {
 }
 
 .brand__icon {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  object-fit: cover;
+  overflow: hidden;
   flex-shrink: 0;
+  display: block;
 }
 
 .brand__text {
@@ -526,13 +530,13 @@ button {
 }
 
 .hero-panel__bg.is-loaded {
-  opacity: 0.46;
+  opacity: 0.76;
 }
 
 .hero-panel__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(9, 10, 15, 0.42) 0%, rgba(9, 10, 15, 0.86) 100%);
+  background: linear-gradient(180deg, rgba(9, 10, 15, 0.10) 0%, rgba(9, 10, 15, 0.46) 100%);
   pointer-events: none;
 }
 
@@ -1216,23 +1220,6 @@ button {
   display: none;
 }
 
-.topbar__search-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  max-width: 580px;
-}
-
-.topbar__search-group .search {
-  max-width: none;
-}
-
-.geo-btn {
-  flex-shrink: 0;
-  padding: 0 12px;
-}
-
 .header-toggle {
   gap: 6px;
   padding: 0 12px;
@@ -1329,4 +1316,34 @@ button {
 
 .magnetic-card.is-magnet-active {
   border-color: rgba(255, 69, 102, 0.32);
+}
+
+
+.m-day-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 14px 12px;
+}
+
+.m-day-card__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: var(--panel-primary);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.78rem;
+}
+
+.m-day-card__chip-label {
+  color: var(--text-secondary);
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
 }

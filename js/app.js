@@ -111,9 +111,6 @@ function syncControlLabels() {
   const unitHeaderEl = document.getElementById('unitLabelHeader');
   if (unitHeaderEl) unitHeaderEl.textContent = unit;
 
-  const geoTextEl = document.querySelector('#geoLocateBtn .chip-control__text');
-  if (geoTextEl) geoTextEl.textContent = t('actions.geo');
-
   updateFavoriteButtonState();
 }
 
@@ -601,69 +598,6 @@ function bindGlobalControls() {
 
   document.getElementById('langBtnHeader')?.addEventListener('click', toggleLang);
   document.getElementById('unitBtnHeader')?.addEventListener('click', toggleUnit);
-
-  document.getElementById('geoLocateBtn')?.addEventListener('click', () => {
-    if (!navigator.geolocation) {
-      showBanner(t('errors.geoUnsupported'));
-      return;
-    }
-    const labelEl = document.querySelector('#geoLocateBtn .chip-control__text');
-    const prevLabel = labelEl?.textContent || t('actions.geo');
-    if (labelEl) labelEl.textContent = t('actions.geoDetecting');
-
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        if (labelEl) labelEl.textContent = prevLabel;
-        const { latitude, longitude } = pos.coords;
-        let resolvedCity = {
-          id: Date.now(),
-          name: getLang() === 'en' ? 'Current Location' : 'Текущая позиция',
-          admin1: '',
-          country: `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`,
-          latitude,
-          longitude,
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'auto',
-        };
-        try {
-          const revUrl = new URL('https://geocoding-api.open-meteo.com/v1/reverse');
-          revUrl.searchParams.set('latitude', String(latitude));
-          revUrl.searchParams.set('longitude', String(longitude));
-          revUrl.searchParams.set('language', getLang());
-          revUrl.searchParams.set('count', '1');
-          const r = await fetch(revUrl.toString());
-          if (r.ok) {
-            const j = await r.json();
-            const first = j?.results?.[0];
-            if (first?.name) {
-              resolvedCity = {
-                id: first.id || Date.now(),
-                name: first.name,
-                admin1: first.admin1 || '',
-                country: first.country || '',
-                latitude,
-                longitude,
-                timezone: first.timezone || resolvedCity.timezone,
-              };
-            }
-          }
-        } catch {
-          // Keep coordinate-based city fallback
-        }
-        const searchInput = document.getElementById('citySearchInput');
-        if (searchInput) searchInput.value = resolvedCity.name;
-        selectCity(resolvedCity);
-      },
-      (err) => {
-        if (labelEl) labelEl.textContent = prevLabel;
-        if (err.code === 1) {
-          showBanner(t('errors.geoDenied'));
-        } else {
-          showBanner(t('errors.geoFailed'));
-        }
-      },
-      { enableHighAccuracy: false, timeout: 9000 }
-    );
-  });
 
   document.getElementById('favoriteToggleBtn')?.addEventListener('click', () => {
     toggleFavoriteCity(state.city);

@@ -86,14 +86,9 @@
     display: none;
   }
 
-  .topbar__search-group {
+  .search {
     order: 3;
     flex: 1 1 100%;
-    max-width: 100%;
-  }
-
-  .search {
-    flex: 1;
     max-width: 100%;
   }
 

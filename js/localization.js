@@ -17,6 +17,14 @@ const DICTIONARY = {
       empty: 'Города не найдены',
       error: 'Ошибка поиска города',
     },
+    controls: {
+      lang: 'Язык',
+      unit: 'Ед.',
+    },
+    sparkline: {
+      tempTrend: 'Тренд 24 ч',
+      highsTrend: 'Максимумы',
+    },
     actions: {
       saveCity: 'В избранное',
       savedCity: 'В избранном',
@@ -153,6 +161,14 @@ const DICTIONARY = {
       placeholder: 'Search city (e.g. Bishkek, Tokyo)...',
       empty: 'No cities found',
       error: 'City search failed',
+    },
+    controls: {
+      lang: 'Lang',
+      unit: 'Unit',
+    },
+    sparkline: {
+      tempTrend: '24h trend',
+      highsTrend: 'Highs trend',
     },
     actions: {
       saveCity: 'Save city',
@@ -315,6 +331,12 @@ export function applyStaticTranslations() {
     const key = el.getAttribute('data-i18n');
     if (key) el.textContent = t(key);
   });
+
+  const langTagEl = document.querySelector('#langBtnHeader .header-toggle__tag');
+  if (langTagEl) langTagEl.textContent = t('controls.lang');
+
+  const unitTagEl = document.querySelector('#unitBtnHeader .header-toggle__tag');
+  if (unitTagEl) unitTagEl.textContent = t('controls.unit');
 
   const searchInput = document.getElementById('citySearchInput');
   if (searchInput) {

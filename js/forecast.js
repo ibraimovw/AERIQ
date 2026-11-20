@@ -169,6 +169,21 @@ function renderMobileList() {
 
     btn.append(left, mid, right);
 
+    const quickChips = document.createElement('div');
+    quickChips.className = 'm-day-card__chips';
+
+    activeDefs.forEach((def) => {
+      const chip = document.createElement('span');
+      chip.className = 'm-day-card__chip';
+      const lbl = document.createElement('span');
+      lbl.className = 'm-day-card__chip-label';
+      lbl.textContent = `${t(def.labelKey)}: `;
+      const val = document.createElement('strong');
+      val.textContent = formatCellValue(day, def.key, lastUnit);
+      chip.append(lbl, val);
+      quickChips.appendChild(chip);
+    });
+
     const details = document.createElement('div');
     details.className = 'm-day-card__details';
     details.hidden = true;
@@ -190,7 +205,7 @@ function renderMobileList() {
       btn.setAttribute('aria-expanded', String(!nextHidden));
     });
 
-    card.append(btn, details);
+    card.append(btn, quickChips, details);
     list.appendChild(card);
   });
 }
