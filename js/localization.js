@@ -1,15 +1,23 @@
-import { $$, $ } from "./utils.js";
-const translations = {
-  ru: { placeholder:"Найти город...", saved:"В избранном", save:"В избранное", noAir:"Данные о качестве воздуха сейчас недоступны.", good:"Хорошее", moderate:"Умеренное", poor:"Нездоровое", error:"Не удалось загрузить погоду." },
-  en: { placeholder:"Search city...", saved:"Saved", save:"Add to favorites", noAir:"Air quality data is currently unavailable.", good:"Good", moderate:"Moderate", poor:"Unhealthy", error:"Could not load weather." }
+const dictionaries = {
+  ru: {workspace:'РАБОЧЕЕ ПРОСТРАНСТВО',home:'Главная',forecast:'Прогноз',map:'Карта',favorites:'Избранное',preferences:'НАСТРОЙКИ',language:'Язык',systemReady:'Система готова',yourWeather:'Ваша погода',sourceSoon:'Источник данных подключается на этапе 2',cityPlaceholder:'Выбранный город появится здесь',weatherPlaceholder:'Ожидаем подключение погодных данных',realOnly:'Здесь будут отображаться только реальные значения из погодного API.',visualReady:'Визуальная система готова',metrics:'Погодные показатели',humidity:'Влажность',wind:'Ветер',pressure:'Давление',visibility:'Видимость',uv:'УФ-индекс',dew:'Точка росы',noData:'Нет данных',hourly:'Почасовой прогноз',hourlyWait:'Почасовые данные появятся после подключения API',sunrise:'Восход и закат',sunWait:'Продолжительность дня появится вместе с данными города.',sixteen:'Прогноз на 16 дней',allDays:'Все дни ↗',forecastWait:'Прогноз появится после подключения погодного API',eightDays:'На главной будут показаны ближайшие 8 дней.',insightWait:'Советы будут формироваться на основе реальных погодных показателей.',weatherMap:'Погодная карта',extended:'Расширенный прогноз',forecastIntro:'Подробная метеорологическая сводка на 16 дней.',forecastModule:'Модуль прогноза',forecastText:'Единая таблица с настраиваемыми показателями и адаптивным списком для мобильных устройств.',planned:'ЗАПЛАНИРОВАНО',mapIntro:'Интерактивная карта с погодными слоями и точками наблюдения.',mapModule:'Картографический модуль',mapText:'Leaflet и реальные погодные данные будут подключены на этапе карты.',favoritesIntro:'Ваши сохранённые города будут собраны в одном месте.',noFavorites:'Пока нет избранных городов',favoritesWait:'Добавление и сохранение городов подключим вместе с поиском.',footer:'Погода. Точность. Атмосфера.'},
+  en: {workspace:'WORKSPACE',home:'Home',forecast:'Forecast',map:'Map',favorites:'Favorites',preferences:'PREFERENCES',language:'Language',systemReady:'System ready',yourWeather:'Your weather',sourceSoon:'Weather data source will be connected in stage 2',cityPlaceholder:'Selected city will appear here',weatherPlaceholder:'Waiting for weather data connection',realOnly:'Only real values from the weather API will be displayed here.',visualReady:'Visual system ready',metrics:'Weather details',humidity:'Humidity',wind:'Wind',pressure:'Pressure',visibility:'Visibility',uv:'UV index',dew:'Dew point',noData:'No data',hourly:'Hourly forecast',hourlyWait:'Hourly data will appear after API connection',sunrise:'Sunrise & sunset',sunWait:'Day length will appear with city weather data.',sixteen:'16-day forecast',allDays:'View all ↗',forecastWait:'Forecast will appear after weather API connection',eightDays:'The next 8 days will be shown on the home page.',insightWait:'Insights will be generated from real weather conditions.',weatherMap:'Weather map',extended:'Extended forecast',forecastIntro:'Detailed 16-day meteorological outlook.',forecastModule:'Forecast module',forecastText:'A unified table with configurable metrics and a responsive mobile list.',planned:'PLANNED',mapIntro:'Interactive map with weather layers and observation points.',mapModule:'Mapping module',mapText:'Leaflet and real weather data will be connected during the map stage.',favoritesIntro:'Your saved cities will be collected in one place.',noFavorites:'No favorite cities yet',favoritesWait:'Adding and saving cities will be connected with city search.',footer:'Weather. Precision. Atmosphere.'}
 };
-let language = "ru";
-export function setLanguage(value) {
-  language = value === "en" ? "en" : "ru";
-  document.documentElement.lang = language;
-  $("#citySearch").placeholder = translations[language].placeholder;
-  $$("[data-language]").forEach(button => button.classList.toggle("active", button.dataset.language === language));
+export function initLocalization() {
+  const button = document.querySelector('#languageToggle');
+  const value = document.querySelector('#languageValue');
+  let language = localStorage.getItem('aeriq-language') || 'ru';
+  function apply() {
+    document.documentElement.lang = language;
+    value.textContent = language.toUpperCase();
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const translation = dictionaries[language][el.dataset.i18n];
+      if (translation) el.textContent = translation;
+    });
+    const page = location.hash.slice(1) || 'home';
+    const pageTitle = document.querySelector('#pageTitle');
+    if (titlesForLanguage[language][page]) pageTitle.textContent = titlesForLanguage[language][page];
+  }
+  const titlesForLanguage = {ru:{home:'Обзор погоды',forecast:'Расширенный прогноз',map:'Погодная карта',favorites:'Избранное'},en:{home:'Weather overview',forecast:'Extended forecast',map:'Weather map',favorites:'Favorites'}};
+  button.addEventListener('click', () => { language = language === 'ru' ? 'en' : 'ru'; localStorage.setItem('aeriq-language', language); apply(); });
+  apply();
 }
-export const t = key => translations[language][key] || key;
-export const locale = () => language === "ru" ? "ru-RU" : "en-US";
-export const getLanguage = () => language;
