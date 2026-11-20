@@ -1,29 +1,44 @@
-const titles = {
-  ru: { home: 'Обзор погоды', forecast: 'Расширенный прогноз', map: 'Погодная карта', favorites: 'Избранное' },
-  en: { home: 'Weather overview', forecast: 'Extended forecast', map: 'Weather map', favorites: 'Favorites' }
-};
+const VALID_SECTIONS = new Set(['home', 'forecast', 'map', 'favorites']);
 
-export function initNavigation() {
-  const sidebar = document.querySelector('#sidebar');
-  const title = document.querySelector('#pageTitle');
-  const views = [...document.querySelectorAll('.page')];
-  const buttons = [...document.querySelectorAll('[data-page]')];
-  function openPage(page) {
-    if (!titles.ru[page]) return;
-    views.forEach(view => view.classList.toggle('active', view.id === `page-${page}`));
-    buttons.forEach(button => button.classList.toggle('active', button.dataset.page === page));
-    const language = localStorage.getItem('aeriq-language') || 'ru';
-    title.textContent = titles[language][page];
-    history.replaceState(null, '', `#${page}`);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+export function initNavigation(onSectionChange) {
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('sidebarToggleBtn');
+
+  if (sidebar && toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('is-collapsed');
+    });
   }
-  buttons.forEach(button => button.addEventListener('click', () => openPage(button.dataset.page)));
-  document.querySelectorAll('[data-go]').forEach(button => button.addEventListener('click', () => openPage(button.dataset.go)));
-  document.querySelector('#collapseSidebar').addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
-    const collapsed = sidebar.classList.contains('collapsed');
-    document.querySelector('#collapseSidebar').setAttribute('aria-label', collapsed ? 'Развернуть меню' : 'Свернуть меню');
+
+  document.querySelectorAll('[data-section]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-section');
+      if (target) switchSection(target, onSectionChange);
+    });
   });
-  const initial = location.hash.slice(1);
-  openPage(titles.ru[initial] ? initial : 'home');
+
+  document.querySelectorAll('[data-goto]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-goto');
+      if (target) switchSection(target, onSectionChange);
+    });
+  });
+}
+
+export function switchSection(sectionName, onSectionChange) {
+  const target = VALID_SECTIONS.has(sectionName) ? sectionName : 'home';
+
+  document.querySelectorAll('.section-view').forEach((sec) => {
+    const isMatch = sec.getAttribute('data-view') === target;
+    sec.hidden = !isMatch;
+    sec.classList.toggle('is-active', isMatch);
+  });
+
+  document.querySelectorAll('[data-section]').forEach((btn) => {
+    btn.classList.toggle('is-active', btn.getAttribute('data-section') === target);
+  });
+
+  if (typeof onSectionChange === 'function') {
+    onSectionChange(target);
+  }
 }
