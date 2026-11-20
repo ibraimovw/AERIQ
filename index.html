@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08080d">
+  <meta name="description" content="AERIQ — погода, атмосфера и прогнозы городов.">
+  <title>AERIQ — Beyond the forecast</title>
+  <link rel="icon" type="image/svg+xml" href="assets/aeriq-mark.svg">
+  <link rel="apple-touch-icon" href="assets/aeriq-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="page-loader" id="pageLoader" aria-label="AERIQ loading">
+    <div class="loader-center">
+      <img src="assets/aeriq-mark.svg" alt="" class="loader-logo">
+      <div class="loader-wordmark">AERIQ<span>.</span></div>
+      <div class="loader-track"><i></i></div>
+      <div class="loader-caption">BEYOND THE FORECAST</div>
+    </div>
+  </div>
+  <div class="ambient ambient-blue"></div><div class="ambient ambient-pink"></div>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#weather" aria-label="AERIQ — главная">
+        <img src="assets/aeriq-mark.svg" alt="" class="brand-symbol">
+        <span class="brand-copy"><b>AERIQ<span>.</span></b><small>BEYOND THE FORECAST</small></span>
+      </a>
+      <nav class="nav-list" aria-label="Навигация">
+        <a class="nav-link active" href="#weather" data-section="weather"><span class="nav-glyph">◉</span><span data-i18n="navWeather">Погода</span></a>
+        <a class="nav-link" href="#monthly" data-section="monthly"><span class="nav-glyph">▦</span><span data-i18n="navMonthly">16 дней</span></a>
+        <a class="nav-link" href="#map-section" data-section="map-section"><span class="nav-glyph">⌖</span><span data-i18n="navMap">Карта</span></a>
+        <a class="nav-link" href="#air-section" data-section="air-section"><span class="nav-glyph">≋</span><span data-i18n="navAir">Качество воздуха</span></a>
+        <a class="nav-link" href="#cities-section" data-section="cities-section"><span class="nav-glyph">☆</span><span data-i18n="navCities">Мои города</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-note"><span class="note-orb"></span><small>WEATHER / ATMOSPHERE / DATA</small><p data-i18n="sidebarLine">Мир меняется.<br>Будь на шаг впереди.</p></div>
+        <div class="sidebar-version">AERIQ WEATHER <span>V3.0</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-brand" id="mobileMenu" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button>
+        <form class="search-box" id="searchForm">
+          <span class="search-glass">⌕</span><input id="citySearch" type="search" placeholder="Найти город..." autocomplete="off" aria-label="Найти город">
+          <kbd>↵</kbd><div class="search-results" id="searchResults"></div>
+        </form>
+        <div class="topbar-right">
+          <div class="language-switch"><button class="lang active" data-lang="ru">RU</button><button class="lang" data-lang="en">EN</button></div>
+          <button class="top-icon" id="unitButton" title="°C / °F">°C</button>
+          <button class="top-icon location-button" id="locationButton" title="Моё местоположение">⌖</button>
+        </div>
+      </header>
+
+      <section class="page-section" id="weather">
+        <div class="section-kicker"><span class="live-pulse"></span><span data-i18n="liveWeather">ПОГОДА СЕЙЧАС</span><span class="kicker-line"></span><span class="last-updated" id="updatedAt">—</span></div>
+        <section class="panorama-card magnetic" id="panoramaCard">
+          <div class="panorama-image" id="panoramaImage"></div>
+          <div class="panorama-shade"></div>
+          <div class="panorama-top">
+            <div class="city-label"><span class="location-pin">⌖</span><div><div class="city-name" id="cityName">Бишкек</div><div class="city-meta" id="cityMeta">Кыргызстан · местное время</div></div></div>
+            <button class="favorite-button" id="favoriteButton" title="Добавить в избранное">☆ <span data-i18n="saveCity">Сохранить город</span></button>
+          </div>
+          <div class="panorama-weather">
+            <div class="weather-main">
+              <div class="weather-condition" id="condition">Загружаем погоду</div>
+              <div class="temperature-line"><span id="temperature">—</span><sup id="degreeUnit">°C</sup></div>
+              <div class="feels-line"><span data-i18n="feelsLike">Ощущается как</span> <b id="feelsLike">—</b></div>
+              <div class="today-range"><span>↑ <b id="todayHigh">—</b></span><span>↓ <b id="todayLow">—</b></span></div>
+            </div>
+            <div class="weather-visual" id="weatherVisual"><div class="visual-sun"></div><div class="visual-cloud cloud-a"></div><div class="visual-cloud cloud-b"></div><div class="visual-rain"></div></div>
+          </div>
+          <div class="panorama-footer"><span id="cityLocalTime">—</span><span class="panorama-caption" data-i18n="panoramaCaption">АТМОСФЕРА ГОРОДА В РЕАЛЬНОМ ВРЕМЕНИ</span><span class="photo-credit" id="photoCredit"></span></div>
+        </section>
+
+        <section class="metric-strip" aria-label="Погодные показатели">
+          <article class="metric-card magnetic"><span class="metric-icon strawberry">◌</span><small data-i18n="humidity">Влажность</small><strong id="humidity">—</strong><em data-i18n="relativeHumidity">Относительная</em></article>
+          <article class="metric-card magnetic"><span class="metric-icon blue">≋</span><small data-i18n="wind">Ветер</small><strong id="wind">—</strong><em id="windDirection">—</em></article>
+          <article class="metric-card magnetic"><span class="metric-icon violet">◉</span><small data-i18n="pressure">Давление</small><strong id="pressure">—</strong><em data-i18n="seaLevel">На уровне моря</em></article>
+          <article class="metric-card magnetic"><span class="metric-icon pink">◎</span><small data-i18n="visibility">Видимость</small><strong id="visibility">—</strong><em data-i18n="clearDistance">Дальность обзора</em></article>
+          <article class="metric-card magnetic"><span class="metric-icon yellow">☼</span><small>UV INDEX</small><strong id="uv">—</strong><em id="uvLabel">—</em></article>
+          <article class="metric-card magnetic"><span class="metric-icon orange">◍</span><small data-i18n="dewPoint">Точка росы</small><strong id="dewPoint">—</strong><em data-i18n="comfortIndicator">Показатель комфорта</em></article>
+        </section>
+
+        <section class="sun-card panel magnetic">
+          <div class="sun-info"><span class="sun-icon sunrise-icon">↗</span><div><small data-i18n="sunrise">Рассвет</small><strong id="sunrise">—</strong></div></div>
+          <div class="sun-track"><div class="sun-path"><i id="sunPosition"></i></div><div class="sun-track-labels"><span data-i18n="sunrise">Рассвет</span><span data-i18n="dayLength">Световой день</span><span data-i18n="sunset">Закат</span></div></div>
+          <div class="sun-info right"><span class="sun-icon sunset-icon">↘</span><div><small data-i18n="sunset">Закат</small><strong id="sunset">—</strong></div></div>
+          <div class="sun-extra"><small data-i18n="dayLength">Световой день</small><b id="dayLength">—</b><small data-i18n="goldenHour">Золотой час</small><b id="goldenHour">—</b></div>
+        </section>
+
+        <section class="panel forecast-panel">
+          <div class="panel-heading"><div><span class="eyebrow" data-i18n="forecast24">БЛИЖАЙШИЕ 24 ЧАСА</span><h2 data-i18n="hourlyForecast">Почасовой прогноз</h2></div><div class="view-switch"><button class="active" data-hour-view="list">☷ <span data-i18n="list">Список</span></button><button data-hour-view="chart">⌁ <span data-i18n="chart">График</span></button></div></div>
+          <div class="hour-tabs" id="hourTabs">
+            <button class="active" data-hour-mode="overview" data-i18n="overview">Обзор</button><button data-hour-mode="precipitation" data-i18n="precipitation">Осадки</button><button data-hour-mode="wind" data-i18n="wind">Ветер</button><button data-hour-mode="humidity" data-i18n="humidity">Влажность</button><button data-hour-mode="cloud" data-i18n="cloudCover">Облачность</button><button data-hour-mode="pressure" data-i18n="pressure">Давление</button><button data-hour-mode="uv">UV</button><button data-hour-mode="visibility" data-i18n="visibility">Видимость</button><button data-hour-mode="feels" data-i18n="feelsLike">Ощущается как</button>
+          </div>
+          <div class="hourly-list" id="hourlyList"><div class="loading">—</div></div>
+          <div class="hour-chart-wrap hidden" id="hourChartWrap"><canvas id="hourChart"></canvas></div>
+        </section>
+
+        <section class="forecast-lower">
+          <div class="panel week-panel">
+            <div class="panel-heading"><div><span class="eyebrow" data-i18n="nextSeven">СЛЕДУЮЩИЕ 7 ДНЕЙ</span><h2 data-i18n="sevenDay">Прогноз на неделю</h2></div><a href="#monthly" class="inline-link" data-i18n="allForecast">Весь прогноз ↗</a></div>
+            <div class="week-list" id="weekList"></div>
+          </div>
+          <div class="panel comfort-panel">
+            <div class="panel-heading"><div><span class="eyebrow" data-i18n="dailyInsight">AERIQ INSIGHT</span><h2 data-i18n="comfort">Комфорт сегодня</h2></div><span class="insight-spark">✳</span></div>
+            <div class="comfort-score"><strong id="comfortScore">—</strong><span>/ 100</span><b id="comfortLabel">—</b></div>
+            <p id="comfortText" class="comfort-copy">—</p>
+            <div class="clothing-tip"><span>✦</span><div><small data-i18n="whatToWear">ЧТО НАДЕТЬ</small><p id="clothingTip">—</p></div></div>
+          </div>
+        </section>
+
+        <section class="panel details-panel">
+          <div class="panel-heading"><div><span class="eyebrow" data-i18n="weatherDetailsKicker">УСЛОВИЯ И ДЕТАЛИ</span><h2 data-i18n="weatherDetails">Погодные показатели</h2></div></div>
+          <div class="detail-grid">
+            <article class="detail-tile"><span class="detail-symbol">💧</span><small data-i18n="precipitationToday">Осадки за день</small><strong id="precipitation">—</strong><em data-i18n="precipitationSum">Суммарно</em></article>
+            <article class="detail-tile"><span class="detail-symbol">☁</span><small data-i18n="cloudCover">Облачность</small><strong id="cloudCover">—</strong><em data-i18n="skyCoverage">Покрытие неба</em></article>
+            <article class="detail-tile"><span class="detail-symbol">🌡</span><small data-i18n="apparentTemp">Ощущаемая температура</small><strong id="apparentTemp">—</strong><em data-i18n="bodyPerception">По ощущениям</em></article>
+            <article class="detail-tile"><span class="detail-symbol">☀</span><small data-i18n="maxUv">Максимальный UV</small><strong id="uvMax">—</strong><em id="uvMaxLabel">—</em></article>
+          </div>
+        </section>
+        <section class="weather-alert panel" id="weatherAlert"><div class="alert-mark">✳</div><div><span class="eyebrow" data-i18n="weatherInsightKicker">AERIQ WEATHER INSIGHT</span><h3 id="alertTitle">Погодная сводка</h3><p id="alertText">Анализируем ближайшие часы…</p></div><span class="alert-tag" id="alertTag">LIVE</span></section>
+      </section>
+
+      <section class="page-section panel page-panel" id="monthly">
+        <div class="panel-heading"><div><span class="eyebrow" data-i18n="longRange">LONG RANGE</span><h2 data-i18n="monthlyTitle">Прогноз на 16 дней</h2><p class="section-description" data-i18n="monthlyDescription">Подробный ежедневный прогноз на ближайшие 16 дней.</p></div><span class="pill">16 DAYS</span></div>
+        <div class="forecast-disclaimer" data-i18n="monthlyDisclaimer">Open-Meteo предоставляет ежедневный прогноз максимум на 16 дней. Все даты в этом разделе основаны на прогнозных данных API.</div>
+        <div class="month-grid" id="monthGrid"></div>
+        <div class="panel month-chart-panel"><div class="panel-heading"><div><span class="eyebrow" data-i18n="temperatureTrend">TEMPERATURE TREND</span><h2 data-i18n="monthTemperature">Температурный тренд</h2></div></div><div class="month-chart-wrap"><canvas id="monthChart"></canvas></div></div>
+      </section>
+
+      <section class="page-section panel page-panel" id="map-section">
+        <div class="panel-heading"><div><span class="eyebrow">AERIQ RADAR</span><h2 data-i18n="weatherMap">Погодная карта</h2><p class="section-description" data-i18n="mapDescription">Интерактивная карта с текущим местоположением города.</p></div><span class="pill">OPEN STREET MAP</span></div>
+        <div class="map-toolbar" role="group" aria-label="Слои карты"><button class="map-layer active" data-map-layer="base">BASE</button><button class="map-layer" data-map-layer="radar">RADAR</button><span class="map-status" id="mapStatus">LIVE MAP</span></div><div id="weatherMap" class="weather-map"></div>
+        <p class="map-note" data-i18n="mapNote">Базовая карта CARTO · радар осадков RainViewer (архив до 2 часов; доступность зависит от покрытия).</p>
+      </section>
+
+      <section class="page-section panel page-panel" id="air-section">
+        <div class="panel-heading"><div><span class="eyebrow">AIR QUALITY INDEX</span><h2 data-i18n="airTitle">Качество воздуха</h2><p class="section-description" data-i18n="airDescription">Показатели загрязнения воздуха для выбранного города.</p></div><span class="pill">OPEN-METEO</span></div>
+        <div class="air-overview"><div class="aqi-ring" id="aqiRing"><strong id="aqiValue">—</strong><small>US AQI</small></div><div><div class="aqi-status" id="aqiStatus">—</div><p id="aqiAdvice" class="section-description">—</p></div></div>
+        <div class="air-grid" id="airGrid"></div>
+      </section>
+
+      <section class="page-section panel page-panel" id="cities-section">
+        <div class="panel-heading"><div><span class="eyebrow">YOUR PLACES</span><h2 data-i18n="citiesTitle">Избранные города</h2><p class="section-description" data-i18n="citiesDescription">Сохраняй места и сравнивай погоду.</p></div></div>
+        <div class="city-tools"><h3 data-i18n="savedCities">Сохранённые</h3><button class="small-action" id="compareButton" data-i18n="compare">Сравнить города</button></div>
+        <div class="saved-cities" id="savedCities"></div>
+        <div class="city-tools history-tools"><h3 data-i18n="recentSearches">Недавно просмотренные</h3><button class="text-action" id="clearHistory" data-i18n="clearHistory">Очистить историю</button></div>
+        <div class="history-list" id="historyList"></div>
+        <div class="compare-result" id="compareResult"></div>
+      </section>
+
+      <footer class="site-footer">
+        <div class="footer-main"><div class="footer-brand"><a class="brand footer-logo" href="#weather"><img src="assets/aeriq-mark.svg" alt=""><span><b>AERIQ<span>.</span></b><small>BEYOND THE FORECAST</small></span></a><p data-i18n="footerDescription">Погода, которая помогает чувствовать ритм города и планировать каждый день.</p></div>
+          <div class="footer-column"><b data-i18n="footerExplore">Навигация</b><a href="#weather" data-i18n="navWeather">Погода</a><a href="#monthly" data-i18n="navMonthly">16 дней</a><a href="#map-section" data-i18n="navMap">Карта</a><a href="#air-section" data-i18n="navAir">Качество воздуха</a></div>
+          <div class="footer-column"><b data-i18n="footerTools">Инструменты</b><a href="#cities-section" data-i18n="navCities">Мои города</a><a href="#monthly" data-i18n="footerForecast">Прогноз на 16 дней</a><a href="#map-section" data-i18n="footerRadar">Погодный радар</a></div>
+          <div class="footer-column footer-data"><b data-i18n="footerSources">Источники данных</b><a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo ↗</a><a href="https://www.rainviewer.com/" target="_blank" rel="noreferrer">RainViewer ↗</a><a href="https://www.openstreetmap.org/" target="_blank" rel="noreferrer">OpenStreetMap ↗</a><a href="https://commons.wikimedia.org/" target="_blank" rel="noreferrer">Wikimedia Commons ↗</a></div>
+        </div><div class="footer-bottom"><span>© 2026 AERIQ WEATHER</span><span data-i18n="footerLine">Погода — больше, чем прогноз.</span><span>MADE FOR EVERY DAY <i>✳</i></span></div>
+      </footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
