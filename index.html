@@ -13,8 +13,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
   <div class="page-loader" id="pageLoader" aria-label="AERIQ loading">
@@ -138,7 +138,7 @@
       </section>
 
       <section class="page-section panel page-panel" id="map-section">
-        <div class="panel-heading"><div><span class="eyebrow">AERIQ RADAR</span><h2 data-i18n="weatherMap">Погодная карта</h2><p class="section-description" data-i18n="mapDescription">Интерактивная карта с текущим местоположением города.</p></div><span class="pill">OPEN STREET MAP</span></div>
+        <div class="panel-heading"><div><span class="eyebrow">AERIQ RADAR</span><h2 data-i18n="weatherMap">Погодная карта</h2><p class="section-description" data-i18n="mapDescription">Интерактивная карта с текущим местоположением города.</p></div><span class="pill">DARK BASEMAP</span></div>
         <div class="map-toolbar" role="group" aria-label="Слои карты"><button class="map-layer active" data-map-layer="base">BASE</button><button class="map-layer" data-map-layer="radar">RADAR</button><span class="map-status" id="mapStatus">LIVE MAP</span></div><div id="weatherMap" class="weather-map"></div>
         <p class="map-note" data-i18n="mapNote">Базовая карта CARTO · радар осадков RainViewer (архив до 2 часов; доступность зависит от покрытия).</p>
       </section>

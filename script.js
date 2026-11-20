@@ -17,7 +17,7 @@ humidity:"Влажность",relativeHumidity:"Относительная",wind
 forecast24:"БЛИЖАЙШИЕ 24 ЧАСА",hourlyForecast:"Почасовой прогноз",list:"Список",chart:"График",overview:"Обзор",cloudCover:"Облачность",nextSeven:"СЛЕДУЮЩИЕ 7 ДНЕЙ",sevenDay:"Прогноз на неделю",allForecast:"Весь прогноз ↗",dailyInsight:"AERIQ INSIGHT",comfort:"Комфорт сегодня",whatToWear:"ЧТО НАДЕТЬ",weatherDetailsKicker:"УСЛОВИЯ И ДЕТАЛИ",weatherDetails:"Погодные показатели",
 precipitationToday:"Осадки за день",precipitationSum:"Суммарно",apparentTemp:"Ощущаемая температура",bodyPerception:"По ощущениям",maxUv:"Максимальный UV",
 longRange:"ДОЛГОСРОЧНЫЙ ПРОГНОЗ",monthlyTitle:"Прогноз на 16 дней",monthlyDescription:"Подробный ежедневный прогноз на ближайшие 16 дней.",monthlyDisclaimer:"Open-Meteo предоставляет ежедневный прогноз максимум на 16 дней. Все даты в этом разделе основаны на прогнозных данных API.",temperatureTrend:"ТЕМПЕРАТУРНЫЙ ТРЕНД",monthTemperature:"Температурный тренд",
-weatherMap:"Погодная карта",mapDescription:"Интерактивная карта с текущим местоположением города.",mapNote:"Базовая карта OpenStreetMap. Погодные радарные слои добавим отдельно при выборе совместимого бесплатного источника.",
+weatherMap:"Погодная карта",mapDescription:"Интерактивная карта с текущим местоположением города.",mapNote:"Базовая карта OpenStreetMap DE без пользовательского API-ключа. Для использования нужен доступ к интернету.",
 airTitle:"Качество воздуха",airDescription:"Показатели загрязнения воздуха для выбранного города.",citiesTitle:"Избранные города",citiesDescription:"Сохраняй места и сравнивай погоду.",savedCities:"Сохранённые",compare:"Сравнить города",recentSearches:"Недавно просмотренные",clearHistory:"Очистить историю",footerLine:"Погода — больше, чем прогноз.",footerDescription:"Погода, которая помогает чувствовать ритм города и планировать каждый день.",footerExplore:"Навигация",footerTools:"Инструменты",footerSources:"Источники данных",footerForecast:"Прогноз на 16 дней",footerRadar:"Погодный радар",weatherInsightKicker:"ПОГОДНАЯ СВОДКА",
 clear:"Ясно",mainlyClear:"Преимущественно ясно",partlyCloudy:"Переменная облачность",overcast:"Пасмурно",fog:"Туман",drizzle:"Морось",rain:"Дождь",snow:"Снег",showers:"Ливни",thunder:"Гроза",unknown:"Переменная облачность",
 uvLow:"Низкий",uvModerate:"Умеренный",uvHigh:"Высокий",uvVeryHigh:"Очень высокий",uvExtreme:"Экстремальный",comfortable:"Комфортно",moderateComfort:"Умеренно",uncomfortable:"Некомфортно",wearWarm:"Надень тёплую куртку и закрытую обувь.",wearLight:"Подойдёт лёгкая одежда. Не забудь воду.",wearLayer:"Лучше одеться слоями — погода может меняться.",wearRain:"Возьми зонт или водонепроницаемую куртку.",wearWind:"Добавь ветровку: на улице ветрено.",
@@ -31,7 +31,7 @@ humidity:"Humidity",relativeHumidity:"Relative",wind:"Wind",pressure:"Pressure",
 forecast24:"NEXT 24 HOURS",hourlyForecast:"Hourly forecast",list:"List",chart:"Chart",overview:"Overview",cloudCover:"Cloud cover",nextSeven:"NEXT 7 DAYS",sevenDay:"7-day forecast",allForecast:"Full forecast ↗",dailyInsight:"AERIQ INSIGHT",comfort:"Today's comfort",whatToWear:"WHAT TO WEAR",weatherDetailsKicker:"CONDITIONS & DETAILS",weatherDetails:"Weather details",
 precipitationToday:"Daily precipitation",precipitationSum:"Total",apparentTemp:"Feels-like temperature",bodyPerception:"Perceived temperature",maxUv:"Maximum UV",
 longRange:"LONG RANGE",monthlyTitle:"16-day forecast",monthlyDescription:"Detailed daily forecast for the next 16 days.",monthlyDisclaimer:"Open-Meteo provides daily forecast data for up to 16 days. Every date shown here is based on forecast data from the API.",temperatureTrend:"TEMPERATURE TREND",monthTemperature:"Temperature trend",
-weatherMap:"Weather map",mapDescription:"Interactive map centered on the selected city.",mapNote:"Base OpenStreetMap. Weather radar layers may be added separately when a suitable free source is selected.",
+weatherMap:"Weather map",mapDescription:"Interactive map centered on the selected city.",mapNote:"OpenStreetMap DE base map without a user API key. Internet access is required.",
 airTitle:"Air quality",airDescription:"Air pollution indicators for the selected city.",citiesTitle:"Saved cities",citiesDescription:"Save places and compare their weather.",savedCities:"Saved",compare:"Compare cities",recentSearches:"Recently viewed",clearHistory:"Clear history",footerLine:"Weather is more than a forecast.",footerDescription:"Weather that helps you feel the rhythm of the city and plan every day.",footerExplore:"Explore",footerTools:"Tools",footerSources:"Data sources",footerForecast:"16-day forecast",footerRadar:"Weather radar",weatherInsightKicker:"WEATHER INSIGHT",
 clear:"Clear",mainlyClear:"Mainly clear",partlyCloudy:"Partly cloudy",overcast:"Overcast",fog:"Fog",drizzle:"Drizzle",rain:"Rain",snow:"Snow",showers:"Showers",thunder:"Thunderstorm",unknown:"Variable clouds",
 uvLow:"Low",uvModerate:"Moderate",uvHigh:"High",uvVeryHigh:"Very high",uvExtreme:"Extreme",comfortable:"Comfortable",moderateComfort:"Moderate",uncomfortable:"Uncomfortable",wearWarm:"Wear a warm jacket and closed shoes.",wearLight:"Light clothing should work. Remember water.",wearLayer:"Dress in layers — conditions may change.",wearRain:"Take an umbrella or waterproof jacket.",wearWind:"Bring a windbreaker: it is breezy outside.",
@@ -52,25 +52,44 @@ function cityDisplay(city=state.city){return state.lang==="ru"?(city.nameRu||cit
 function countryDisplay(city=state.city){return state.lang==="ru"?(city.countryRu||city.country):(city.countryEn||city.country);}
 async function cityPhoto(city=state.city,code=0){
   const request=++state.photoRequest,box=$("#panoramaImage"),credit=$("#photoCredit");
-  const query=[city.nameEn||city.name,city.countryEn||city.country,"city skyline"].filter(Boolean).join(" ");
-  const fallback="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=2000&q=85";
+  const cityName=city.nameEn||city.name||"city",country=city.countryEn||city.country||"";
+  const query=[cityName,country,"city panorama skyline"].filter(Boolean).join(" ");
+  const lock=[cityName,country].join("-").toLowerCase().replace(/[^a-z0-9]+/g,"-").split("").reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
+  const fallback=`https://loremflickr.com/1920/1000/${encodeURIComponent(cityName)},city?lock=${lock}`;
   box.classList.add("is-loading");
   try{
-    const p=new URLSearchParams({action:"query",generator:"search",gsrsearch:`${query} filetype:bitmap`,gsrnamespace:"6",gsrlimit:"10",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"2000",iiextmetadatafilter:"LicenseShortName|Artist",format:"json",origin:"*"});
-    const r=await fetch(`https://commons.wikimedia.org/w/api.php?${p}`);if(!r.ok)throw Error("image api");
-    const j=await r.json(),pages=Object.values(j.query?.pages||{}).filter(x=>x.imageinfo?.[0]?.thumburl);
-    const pick=pages.find(x=>/city|skyline|panorama|landscape|view/i.test(x.title))||pages[0];
+    const search=new URLSearchParams({action:"query",list:"search",srsearch:`${query} filetype:bitmap`,srnamespace:"6",srlimit:"18",format:"json",origin:"*"});
+    const sr=await fetch(`https://commons.wikimedia.org/w/api.php?${search}`);
+    if(!sr.ok)throw Error("Commons search unavailable");
+    const sj=await sr.json(),hits=sj.query?.search||[];
+    const ids=hits.map(x=>x.pageid).filter(Boolean).slice(0,12);
+    if(!ids.length)throw Error("No city photos found");
+    const details=new URLSearchParams({action:"query",pageids:ids.join("|"),prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"2000",iiextmetadatafilter:"LicenseShortName|Artist",format:"json",origin:"*"});
+    const ir=await fetch(`https://commons.wikimedia.org/w/api.php?${details}`);
+    if(!ir.ok)throw Error("Commons image details unavailable");
+    const ij=await ir.json();
+    const candidates=Object.values(ij.query?.pages||{}).map(x=>({title:x.title,info:x.imageinfo?.[0]})).filter(x=>x.info?.thumburl && /\.(jpe?g|png|webp)$/i.test(x.info.thumburl));
+    const pick=candidates.find(x=>/skyline|panorama|cityscape|city.?view|aerial|landscape/i.test(x.title))||candidates[0];
     if(request!==state.photoRequest)return;
-    const info=pick?.imageinfo?.[0],url=info?.thumburl||fallback;
-    box.style.backgroundImage=`url("${url}")`;
-    const artist=info?.extmetadata?.Artist?.value?.replace(/<[^>]*>/g,"")||"Wikimedia Commons";
-    const license=info?.extmetadata?.LicenseShortName?.value||"Commons";
-    if(credit)credit.innerHTML=info?`<a href="${info.descriptionurl}" target="_blank" rel="noreferrer">${artist} · ${license}</a>`:"";
-  }catch(e){if(request===state.photoRequest){box.style.backgroundImage=`url("${fallback}")`;if(credit)credit.textContent="Unsplash";}}
+    if(!pick)throw Error("No usable city image");
+    const info=pick.info;
+    await new Promise((resolve,reject)=>{const img=new Image();img.onload=resolve;img.onerror=reject;img.src=info.thumburl;});
+    if(request!==state.photoRequest)return;
+    box.style.backgroundImage=`url("${info.thumburl}")`;
+    const artist=(info.extmetadata?.Artist?.value||"Wikimedia Commons").replace(/<[^>]*>/g,"").slice(0,90);
+    const license=info.extmetadata?.LicenseShortName?.value||"Commons";
+    credit.innerHTML=`<a href="${info.descriptionurl}" target="_blank" rel="noopener noreferrer">${artist} · ${license}</a>`;
+  }catch(error){
+    if(request!==state.photoRequest)return;
+    box.style.backgroundImage=`url("${fallback}")`;
+    credit.textContent=state.lang==="ru"?"Фото города":"City photo";
+    console.warn("AERIQ city panorama:",error);
+  }
   const hour=new Date().getHours(),night=hour<6||hour>=19;
-  box.style.filter=night?"brightness(.62) saturate(1.18) hue-rotate(8deg)":"brightness(.82) saturate(1.12)";
+  box.style.filter=night?"brightness(.58) saturate(1.12)":"brightness(.78) saturate(1.12)";
   box.classList.remove("is-loading");
 }
+
 async function loadWeather(){
   try{
     const p=new URLSearchParams({latitude:state.city.latitude,longitude:state.city.longitude,timezone:"auto",forecast_days:"16",wind_speed_unit:"kmh",
@@ -201,7 +220,7 @@ $("#searchForm").addEventListener("submit",async e=>{e.preventDefault();const q=
 document.addEventListener("click",e=>{if(!e.target.closest(".search-box"))$("#searchResults").classList.remove("show");});
 $("#locationButton").onclick=()=>{if(!navigator.geolocation){toast(t("locationDenied"));return;}navigator.geolocation.getCurrentPosition(async p=>{const coords=p.coords;let name=state.lang==="ru"?"Моё местоположение":"My location";try{const r=await fetch(`${GEO}?latitude=${coords.latitude}&longitude=${coords.longitude}&count=1&language=${state.lang}`);const j=await r.json();if(j.results?.[0]){const c=mapCity(j.results[0]);c.latitude=coords.latitude;c.longitude=coords.longitude;setCity(c);return;}}catch{}setCity({name,nameEn:name,country:"",countryEn:"",latitude:coords.latitude,longitude:coords.longitude,timezone:"auto"});},()=>toast(t("locationDenied")),{timeout:10000});};
 $("#unitButton").onclick=()=>{state.unit=state.unit==="celsius"?"fahrenheit":"celsius";$("#unitButton").textContent=state.unit==="celsius"?"°C":"°F";if(state.weather)renderWeather();};
-document.querySelectorAll(".lang").forEach(b=>b.onclick=()=>{state.lang=b.dataset.lang;document.documentElement.lang=state.lang;document.querySelectorAll(".lang").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll("[data-i18n]").forEach(el=>el.innerHTML=t(el.dataset.i18n));$("#citySearch").placeholder=state.lang==="ru"?"Найти город...":"Search city...";if(state.weather){renderWeather();renderCities();loadAir();renderWeatherInsight();}const mn=document.querySelector(".mobile-nav");if(mn)mn.innerHTML=`<a class="active" href="#weather"><span>◉</span><small>${state.lang==="ru"?"Погода":"Weather"}</small></a><a href="#map-section"><span>⌖</span><small>${state.lang==="ru"?"Карта":"Map"}</small></a><a href="#cities-section"><span>☆</span><small>${state.lang==="ru"?"Города":"Places"}</small></a><button id="mobileMore"><span>☰</span><small>${state.lang==="ru"?"Ещё":"More"}</small></button>`;$("#mobileMore").onclick=()=>$("#sidebar").classList.toggle("open");});
+document.querySelectorAll(".lang").forEach(b=>b.onclick=()=>{state.lang=b.dataset.lang;document.documentElement.lang=state.lang;document.querySelectorAll(".lang").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll("[data-i18n]").forEach(el=>el.innerHTML=t(el.dataset.i18n));$("#citySearch").placeholder=state.lang==="ru"?"Найти город...":"Search city...";if(state.weather){renderWeather();renderCities();loadAir();renderWeatherInsight();}});
 document.querySelectorAll("[data-hour-mode]").forEach(b=>b.onclick=()=>{state.hourMode=b.dataset.hourMode;document.querySelectorAll("[data-hour-mode]").forEach(x=>x.classList.toggle("active",x===b));renderHourly(Math.max(0,state.weather.hourly.time.findIndex(x=>x>=state.weather.current.time)));});
 document.querySelectorAll("[data-hour-view]").forEach(b=>b.onclick=()=>{state.hourView=b.dataset.hourView;document.querySelectorAll("[data-hour-view]").forEach(x=>x.classList.toggle("active",x===b));$("#hourlyList").classList.toggle("hidden",state.hourView==="chart");$("#hourChartWrap").classList.toggle("hidden",state.hourView!=="chart");if(state.hourView==="chart")renderHourChart(Math.max(0,state.weather.hourly.time.findIndex(x=>x>=state.weather.current.time)));});
 $("#favoriteButton").onclick=()=>{const id=cityId(state.city);if(isFavorite(state.city)){state.favorites=state.favorites.filter(c=>cityId(c)!==id);toast(t("cityRemoved"));}else{state.favorites.unshift({...state.city});state.favorites=state.favorites.slice(0,12);toast(t("citySaved"));}localStorage.setItem("aeriq-favorites",JSON.stringify(state.favorites));renderCities();$("#favoriteButton").classList.toggle("saved",isFavorite(state.city));$("#favoriteButton").innerHTML=`${isFavorite(state.city)?"★":"☆"} <span>${t("saveCity")}</span>`;};
@@ -236,7 +255,7 @@ async function loadMap(){
   if(!state.map){
     state.map=L.map("weatherMap",{scrollWheelZoom:false,zoomControl:false}).setView([state.city.latitude,state.city.longitude],10);
     L.control.zoom({position:"bottomright"}).addTo(state.map);
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · © <a href="https://carto.com/attributions">CARTO</a>',subdomains:"abcd",maxZoom:20}).addTo(state.map);
+    L.tileLayer("https://tile.openstreetmap.de/{z}/{x}/{y}.png",{attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> · Tiles <a href="https://www.openstreetmap.de/">OpenStreetMap DE</a>',maxZoom:18,updateWhenIdle:true,keepBuffer:2}).addTo(state.map);
     state.mapMarker=L.circleMarker([state.city.latitude,state.city.longitude],{radius:8,color:"#ff477e",weight:3,fillColor:"#ff477e",fillOpacity:.9}).addTo(state.map).bindPopup(cityDisplay());
   }else{state.map.setView([state.city.latitude,state.city.longitude],10);state.mapMarker.setLatLng([state.city.latitude,state.city.longitude]).bindPopup(cityDisplay());}
   setTimeout(()=>state.map.invalidateSize(),180);
@@ -257,9 +276,6 @@ document.querySelectorAll("[data-map-layer]").forEach(b=>b.addEventListener("cli
 
 document.querySelectorAll(".nav-link").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();document.querySelectorAll(".nav-link").forEach(x=>x.classList.toggle("active",x===a));const target=$(a.getAttribute("href"));if(target)target.scrollIntoView({behavior:"smooth"});$("#sidebar").classList.remove("open");if(a.dataset.section==="map-section")loadMap();}));
 $("#mobileMenu").onclick=()=>{const open=$("#sidebar").classList.toggle("open");$("#mobileMenu").setAttribute("aria-expanded",String(open));};
-const mobileNav=document.createElement("nav");mobileNav.className="mobile-nav";mobileNav.setAttribute("aria-label","Mobile navigation");mobileNav.innerHTML=`<a class="active" href="#weather"><span>◉</span><small>${state.lang==="ru"?"Погода":"Weather"}</small></a><a href="#map-section"><span>⌖</span><small>${state.lang==="ru"?"Карта":"Map"}</small></a><a href="#cities-section"><span>☆</span><small>${state.lang==="ru"?"Города":"Places"}</small></a><button id="mobileMore"><span>☰</span><small>${state.lang==="ru"?"Ещё":"More"}</small></button>`;document.body.append(mobileNav);
-mobileNav.querySelectorAll("a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();document.querySelectorAll(".mobile-nav a").forEach(x=>x.classList.toggle("active",x===a));$(a.getAttribute("href"))?.scrollIntoView({behavior:"smooth"});}));
-$("#mobileMore").onclick=()=>{$("#sidebar").classList.toggle("open");};
 document.addEventListener("click",e=>{if(window.innerWidth<=850&&!e.target.closest("#sidebar")&&!e.target.closest("#mobileMenu"))$("#sidebar").classList.remove("open");});
 
 // Magnetic tilt is pointer-only; touch and reduced-motion users get a static, accessible layout.
